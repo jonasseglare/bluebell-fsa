@@ -1,6 +1,7 @@
 (ns fsa.core
   (:require [clojure.spec.alpha :as spec]
-            [clojure.spec.test.alpha :as stest]))
+            [clojure.spec.test.alpha :as stest]
+            [clojure.set]))
 
 (spec/def ::table (spec/map-of (constantly true) fn?))
 (spec/def ::current (constantly true))

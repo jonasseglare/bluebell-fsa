@@ -62,6 +62,8 @@
             (fsa/go-to :idle)
             fsa/re-add)})
 
+;;(defn special-graphviz-symbols (set "->"))
+
 (def graphviz-state
   {::fsa/current :idle
    ::fsa/table {:idle (fsa/dispatcher
@@ -83,5 +85,5 @@
 
 
 
-;(fsa/get-words (fsa/parse graphviz-state "   abc   "))
+;(fsa/get-words (fsa/parse graphviz-state "   abc   katt   (  a b c )   \"bra eller hur?\""))
 

@@ -11,5 +11,9 @@
          [[:string "katt"] [:string "skit"]]
          (fsa/get-words (fsa/parse graphviz-state "   \"katt\"  \"skit\"    "))))
     (is (= '([:bracket \(] [:string "kattskit"] [:bracket \)])
-           (fsa/get-words (fsa/parse graphviz-state "( \"kattskit\" )"))))))
-
+           (fsa/get-words (fsa/parse graphviz-state "( \"kattskit\" )"))))
+    (is (= (fsa/get-words (fsa/parse graphviz-state
+                                     "   abc   katt   (  a b c )   \"bra eller hur?\""))
+           '([:word "abc"] [:word "katt"] [:bracket \(]
+             [:word "a"] [:word "b"] [:word "c"]
+             [:bracket \)] [:string "bra eller hur?"])))))
