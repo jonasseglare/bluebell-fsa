@@ -54,7 +54,7 @@
       (if (nil? next)
         (throw (ex-info
                 "No matching form in dispatch"
-                {:args args}))
+                {:args args :state state}))
         next))))
 
 (defn dispatch [& args]

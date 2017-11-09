@@ -16,4 +16,6 @@
                                      "   abc   katt   (  a b c )   \"bra eller hur?\""))
            '([:word "abc"] [:word "katt"] [:bracket \(]
              [:word "a"] [:word "b"] [:word "c"]
-             [:bracket \)] [:string "bra eller hur?"])))))
+             [:bracket \)] [:string "bra eller hur?"])))
+    (is (= (fsa/get-words (fsa/parse graphviz-state " ->  "))
+           '([:special "->"])))))

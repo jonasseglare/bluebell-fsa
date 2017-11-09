@@ -50,17 +50,19 @@
    :action (fsa/tag-symbol :bracket)})
 
 (defn accumulate-typed-word [pred tag]
-  {:predicate fsa/identifier-char?
+  {:predicate pred
    :action (fsa/combine
             (fsa/go-to tag)
             fsa/accumulate-word)})
 
 (def acc-word
-  (accumulate-typed-word fsa/identifier-char? :word))
+  (accumulate-typed-word
+   fsa/identifier-char? :word))
 
 (def special-graphviz-symbols (set "->"))
 
 (defn special-graphviz-symbol? [x]
+  (println "Is it a special symbol?" x)
   (contains? special-graphviz-symbols x))
 
 (def acc-special-graphviz
@@ -84,7 +86,8 @@
                         start-string
                         bracket
                         acc-word
-                        acc-special-graphviz])
+                        acc-special-graphviz
+                        ])
                 :string (fsa/dispatcher
                          [fsa/end
                           escape-char
@@ -102,5 +105,4 @@
 
 
 
-;(fsa/get-words (fsa/parse graphviz-state "   abc   katt   (  a b c )   \"bra eller hur?\""))
-
+;(fsa/get-words (fsa/parse graphviz-state " ->  "))
