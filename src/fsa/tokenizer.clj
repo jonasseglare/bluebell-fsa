@@ -40,12 +40,22 @@
   {:predicate fsa/whitespace?
    :action fsa/no-op})
 
+(def brackets (set "(){}[]"))
+
+(defn bracket? [x]
+  (contains? brackets x))
+
+(def bracket
+  {:predicate bracket?
+   :action (fsa/tag-symbol :bracket)})
+
 (def graphviz-state
   {::fsa/current :idle
    ::fsa/table {:idle (fsa/dispatcher
                        [fsa/end
                         ignore-whitespace
-                        start-string])
+                        start-string
+                        bracket])
                 :string (fsa/dispatcher
                          [fsa/end
                           escape-char
@@ -55,5 +65,5 @@
 
 
 
-;(fsa/get-words (fsa/parse graphviz-state "   \"ka\\ntt\"  \"skit\"    "))
+;(fsa/get-words (fsa/parse graphviz-state "( \"kattskit\" )"))
 

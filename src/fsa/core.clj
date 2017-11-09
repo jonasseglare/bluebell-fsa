@@ -77,6 +77,10 @@
   (fn [state]
     (update state ::words (add-word word))))
 
+(defn tag-symbol [tag]
+  (fn [state]
+    (update state ::words (add-word [tag (::input state)]))))
+
 (defn flush-word [state]
   (-> state
       push-accumulated-word
@@ -129,7 +133,10 @@
                            :value (spec/* char?)))
 
 (defn format-word [[tp v]]
-  [tp (apply str v)])
+  [tp (if (and (coll? v)
+               (every? char? v))
+        (apply str v)
+        v)])
 
 (defn get-words [state]
   (if (contains? state ::words)

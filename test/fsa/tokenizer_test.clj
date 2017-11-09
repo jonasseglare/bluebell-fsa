@@ -9,5 +9,7 @@
     (is (fsa/state? graphviz-state))
     (is (=
          [[:string "katt"] [:string "skit"]]
-         (fsa/get-words (fsa/parse graphviz-state "   \"katt\"  \"skit\"    "))))))
+         (fsa/get-words (fsa/parse graphviz-state "   \"katt\"  \"skit\"    "))))
+    (is (= '([:bracket \(] [:string "kattskit"] [:bracket \)])
+           (fsa/get-words (fsa/parse graphviz-state "( \"kattskit\" )"))))))
 
