@@ -24,10 +24,12 @@
         (assert (state? y))
         y))))
 
+(defn add-word [word]
+  (fn [words] (conj (or words []) word)))
+
 (defn push-accumulated-word [state]
   (if (contains? state ::word)
-    (update state ::words (fn [words] (conj (or words [])
-                                            (::word state))))
+    (update state ::words (add-word (::word state)))
     state))
 
 (defn dissoc-word [state]
