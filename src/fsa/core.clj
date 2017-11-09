@@ -17,6 +17,9 @@
                                     :action fn?))
 (spec/def ::dispatch-pairs (spec/* ::dispatch-pair))
 
+(defn dissoc-word [state]
+  (dissoc state ::word))
+
 (defn eval-dispatch-pair [state]
   (fn [d]
     (if ((:predicate d) (::input state))
