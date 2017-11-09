@@ -1,4 +1,4 @@
-(ns fsa.graphviz)
+(ns fsa.tokenizer)
 
 (defn remove-eol-comment [s]
   (let [i (.indexOf s "//")]
@@ -6,7 +6,7 @@
       s
       (subs s 0 i))))
 
-(defn parse [x]
+(defn remove-eol-comments [x]
   (apply
    str
    (map remove-eol-comment
