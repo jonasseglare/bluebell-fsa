@@ -10,6 +10,9 @@
   (spec/valid? ::state x))
 
 ;;;;;; Helpers
+(spec/def ::predicate fn?)
+(spec/def ::action fn?)
+(spec/def ::parsed-dispatch-pair (spec/keys :req-un [::predicate ::action]))
 (spec/def ::dispatch-pair (spec/cat :predicate fn?
                                     :action fn?))
 (spec/def ::dispatch-pairs (spec/* ::dispatch-pair))
@@ -95,6 +98,11 @@
 
 (defn end? [x]
   (= ::end x))
+
+;; Use with (dispatcher [... end ... ])
+(def end
+  {:predicate end?
+   :action flush-word})
 
 (defn or-pred [& args]
   (fn [x]
