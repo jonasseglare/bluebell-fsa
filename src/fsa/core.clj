@@ -19,7 +19,10 @@
 
 (defn eval-dispatch-pair [state x]
   (fn [d]
-    (if ((:predicate d) x) ((:action d) state x))))
+    (if ((:predicate d) x)
+      (let [y ((:action d) state x)]
+        (assert (state? y))
+        y))))
 
 (defn push-word [state]
   (if (contains? state ::word)
@@ -34,13 +37,18 @@
 (defn combine [& args]
   (reduce combine2 args))
 
+(defn find-first [f]
+  (fn [state x]
+    (if state
+      state
+      (f x))))
+
 (defn dispatch [& args]
   (let [args (spec/conform ::dispatch-pairs args)]
     (fn [state x]
-      (let [next (first
-                  (filter
-                   state?
-                   (map (eval-dispatch-pair state x) args)))]
+      (let [next (reduce (find-first (eval-dispatch-pair state x))
+                         nil
+                         (seq args))]
         (assert (state? next))
         next))))
 
@@ -72,7 +80,12 @@
 (defn is= [x]
   #(= x %))
 
+(defn end? [x]
+  (= ::end x))
 
+(defn or-pred [& args]
+  (fn [x]
+    (first (map (fn [f] (f x)) args))))
 
 ;;;;;;;;
 
@@ -91,3 +104,6 @@
          table ::table} state]
     (assert (contains? table current))
     ((get table current) state x)))
+
+(defn parse [state x]
+  (add (reduce add state x) ::end))

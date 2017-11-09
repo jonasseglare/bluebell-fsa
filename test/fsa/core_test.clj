@@ -2,14 +2,18 @@
   (:require [clojure.test :refer :all]
             [fsa.core :refer :all :as fsa]))
 
+(def terminate-word (combine flush-word (go-to :whitespace)))
+
 (def init-state {::fsa/current :whitespace
                  ::fsa/table {:whitespace (dispatch
+                                           end? no-op
                                            whitespace? no-op
                                            non-whitespace? (combine
                                                             accumulate-word
                                                             (go-to :word)))
                               :word (dispatch
-                                     whitespace? (combine flush-word (go-to :whitespace))
+                                     end? terminate-word
+                                     whitespace? terminate-word
                                      non-whitespace? accumulate-word)}})
 
 (deftest a-test
