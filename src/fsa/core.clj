@@ -17,15 +17,21 @@
   (fn [state x]
     (g (f state x) x)))
 
+(defn eval-dispatch-pair [state x]
+  (fn [d]
+    (if ((:predicate d) x) ((:action d) state x))))
 
+(defn push-word [state]
+  (if (contains? state ::word)
+    (update state ::words (fn [words] (conj (or words [])) (::word state)))
+    state))
+
+(defn dissoc-word [state]
+  (dissoc state ::word))
 
 ;;;;;; Composite ops
 (defn combine [& args]
   (reduce combine2 args))
-
-(defn eval-dispatch-pair [state x]
-  (fn [d]
-    (if ((:predicate d) x) ((:action d) state x))))
 
 (defn dispatch [& args]
   (let [args (spec/conform ::dispatch-pairs args)]
@@ -44,6 +50,18 @@
     (assoc state ::current x)))
 
 (defn no-op [state _] state)
+
+(defn accumulate-word [state x]
+  (update
+   state
+   ::word (fn [word] (conj (or word []) x))))
+
+(defn flush-word [state]
+  (-> state
+      push-word
+      dissoc-word))
+
+;;;;;;;;;; Common predicates
 
 ;;;;;;;;
 
