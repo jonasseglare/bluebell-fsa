@@ -26,7 +26,7 @@
     (is (= [:kattskit]
            (::fsa/words ((push-word :kattskit) init-state nil))))
     (is (not (whitespace? \a)))
-    (is (= ["Jonas" "Östlund"]
+    (is (= [[:word "Jonas"] [:word "Östlund"]]
            (get-words (parse init-state "  Jonas Östlund    "))))
-    (is (= ["Jonas" "Östlund"]
+    (is (= [[:word "Jonas"] [:word "Östlund"]]
            (get-words (parse init-state "  Jonas Östlund"))))))

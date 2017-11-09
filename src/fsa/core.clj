@@ -33,7 +33,7 @@
 
 (defn push-accumulated-word [state]
   (if (contains? state ::word)
-    (update state ::words (add-word (::word state)))
+    (update state ::words (add-word [(::current state) (::word state)]))
     state))
 
 (defn dissoc-word [state]
@@ -129,7 +129,13 @@
 (defn parse [state x]
   (add (reduce add state x) ::end))
 
+(spec/def ::word (spec/cat :type (constantly true)
+                           :value (spec/* char?)))
+
+(defn format-word [[tp v]]
+  [tp (apply str v)])
+
 (defn get-words [state]
   (if (contains? state ::words)
-    (map #(apply str %) (::words state))
+    (map format-word (::words state))
     []))
