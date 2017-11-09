@@ -63,6 +63,14 @@
 
 ;;;;;;;;;; Common predicates
 
+(defn whitespace? [c]
+  (Character/isSpace c))
+
+(defn is= [x]
+  #(= x %))
+
+
+
 ;;;;;;;;
 
 
