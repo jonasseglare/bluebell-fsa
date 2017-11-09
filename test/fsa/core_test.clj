@@ -20,6 +20,8 @@
   (testing "FIXME, I fail."
     (is (whitespace? \tab))
     (is (whitespace? \space))
+    (is (= [:kattskit]
+           (::fsa/words ((push-word :kattskit) init-state nil))))
     (is (not (whitespace? \a)))
     (is (= ["Jonas" "Östlund"]
            (get-words (parse init-state "  Jonas Östlund    "))))

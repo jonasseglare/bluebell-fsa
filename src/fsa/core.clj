@@ -67,6 +67,10 @@
    state
    ::word (fn [word] (conj (or word []) x))))
 
+(defn push-word [word]
+  (fn [state _]
+    (update state ::words (add-word word))))
+
 (defn flush-word [state _]
   (-> state
       push-accumulated-word
