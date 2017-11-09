@@ -49,20 +49,32 @@
   {:predicate bracket?
    :action (fsa/tag-symbol :bracket)})
 
-(def acc-word
+(defn accumulate-typed-word [pred tag]
   {:predicate fsa/identifier-char?
    :action (fsa/combine
-            (fsa/go-to :word)
+            (fsa/go-to tag)
             fsa/accumulate-word)})
 
-(def end-of-word
-  {:predicate (complement fsa/identifier-char?)
+(def acc-word
+  (accumulate-typed-word fsa/identifier-char? :word))
+
+(def special-graphviz-symbols (set "->"))
+
+(defn special-graphviz-symbol? [x]
+  (contains? special-graphviz-symbols x))
+
+(def acc-special-graphviz
+  (accumulate-typed-word
+   special-graphviz-symbol?
+   :special))
+
+(defn end-of-word [pred]
+  {:predicate (complement pred)
    :action (fsa/combine
             fsa/flush-word
             (fsa/go-to :idle)
             fsa/re-add)})
 
-;;(defn special-graphviz-symbols (set "->"))
 
 (def graphviz-state
   {::fsa/current :idle
@@ -71,7 +83,8 @@
                         ignore-whitespace
                         start-string
                         bracket
-                        acc-word])
+                        acc-word
+                        acc-special-graphviz])
                 :string (fsa/dispatcher
                          [fsa/end
                           escape-char
@@ -81,7 +94,11 @@
                 :word (fsa/dispatcher
                        [fsa/end
                         acc-word
-                        end-of-word])}})
+                        (end-of-word fsa/identifier-char?)])
+                :special (fsa/dispatcher
+                          [fsa/end
+                           acc-special-graphviz
+                           (end-of-word special-graphviz-symbol?)])}})
 
 
 
