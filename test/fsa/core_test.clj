@@ -20,4 +20,8 @@
   (testing "FIXME, I fail."
     (is (whitespace? \tab))
     (is (whitespace? \space))
-    (is (not (whitespace? \a)))))
+    (is (not (whitespace? \a)))
+    (is (= ["Jonas" "Östlund"]
+           (get-words (parse init-state "  Jonas Östlund    "))))
+    (is (= ["Jonas" "Östlund"]
+           (get-words (parse init-state "  Jonas Östlund"))))))

@@ -24,7 +24,7 @@
         (assert (state? y))
         y))))
 
-(defn push-word [state]
+(defn push-accumulated-word [state]
   (if (contains? state ::word)
     (update state ::words (fn [words] (conj (or words [])
                                             (::word state))))
@@ -67,7 +67,7 @@
 
 (defn flush-word [state _]
   (-> state
-      push-word
+      push-accumulated-word
       dissoc-word))
 
 ;;;;;;;;;; Common predicates
@@ -107,3 +107,8 @@
 
 (defn parse [state x]
   (add (reduce add state x) ::end))
+
+(defn get-words [state]
+  (if (contains? state ::words)
+    (map #(apply str %) (::words state))
+    []))
