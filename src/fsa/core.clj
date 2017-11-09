@@ -99,6 +99,15 @@
 (defn end? [x]
   (= ::end x))
 
+(def letters "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+(def id-chars (clojure.set/union
+               (set "_0123456789")
+               (set letters)
+               (set (clojure.string/lower-case letters))))
+
+(defn identifier-char? [x]
+  (contains? id-chars x))
+
 ;; Use with (dispatcher [... end ... ])
 (def end
   {:predicate end?
@@ -107,6 +116,11 @@
 (defn or-pred [& args]
   (fn [x]
     (first (map (fn [f] (f x)) args))))
+
+(declare add)
+
+(defn re-add [state]
+  (add state (::input state)))
 
 ;;;;;;;;
 

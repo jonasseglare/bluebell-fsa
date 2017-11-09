@@ -49,21 +49,39 @@
   {:predicate bracket?
    :action (fsa/tag-symbol :bracket)})
 
+(def acc-word
+  {:predicate fsa/identifier-char?
+   :action (fsa/combine
+            (fsa/go-to :word)
+            fsa/accumulate-word)})
+
+(def end-of-word
+  {:predicate (complement fsa/identifier-char?)
+   :action (fsa/combine
+            fsa/flush-word
+            (fsa/go-to :idle)
+            fsa/re-add)})
+
 (def graphviz-state
   {::fsa/current :idle
    ::fsa/table {:idle (fsa/dispatcher
                        [fsa/end
                         ignore-whitespace
                         start-string
-                        bracket])
+                        bracket
+                        acc-word])
                 :string (fsa/dispatcher
                          [fsa/end
                           escape-char
                           end-string
                           read-char])
-                :escape read-escaped}})
+                :escape read-escaped
+                :word (fsa/dispatcher
+                       [fsa/end
+                        acc-word
+                        end-of-word])}})
 
 
 
-;(fsa/get-words (fsa/parse graphviz-state "( \"kattskit\" )"))
+;(fsa/get-words (fsa/parse graphviz-state "   abc   "))
 
