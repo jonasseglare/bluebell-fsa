@@ -23,7 +23,8 @@
 
 (defn push-word [state]
   (if (contains? state ::word)
-    (update state ::words (fn [words] (conj (or words [])) (::word state)))
+    (update state ::words (fn [words] (conj (or words [])
+                                            (::word state))))
     state))
 
 (defn dissoc-word [state]
@@ -45,7 +46,7 @@
 
 
 ;;;;;; Standard ops
-(defn go-to-state [x]
+(defn go-to [x]
   (fn [state _]
     (assoc state ::current x)))
 
@@ -56,7 +57,7 @@
    state
    ::word (fn [word] (conj (or word []) x))))
 
-(defn flush-word [state]
+(defn flush-word [state _]
   (-> state
       push-word
       dissoc-word))
@@ -65,6 +66,8 @@
 
 (defn whitespace? [c]
   (Character/isSpace c))
+
+(def non-whitespace? (complement whitespace?))
 
 (defn is= [x]
   #(= x %))
@@ -82,7 +85,9 @@
 (spec/explain ::state test-state)
 (assert (spec/valid? ::state test-state))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn add [state x]
+  (assert (state? state))
+  (let [{current ::current
+         table ::table} state]
+    (assert (contains? table current))
+    ((get table current) state x)))
