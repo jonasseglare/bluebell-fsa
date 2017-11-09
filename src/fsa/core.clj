@@ -17,14 +17,10 @@
                                     :action fn?))
 (spec/def ::dispatch-pairs (spec/* ::dispatch-pair))
 
-(defn combine2 [f g]
-  (fn [state x]
-    (g (f state x) x)))
-
-(defn eval-dispatch-pair [state x]
+(defn eval-dispatch-pair [state]
   (fn [d]
-    (if ((:predicate d) x)
-      (let [y ((:action d) state x)]
+    (if ((:predicate d) (::input state))
+      (let [y ((:action d) state)]
         (assert (state? y))
         y))))
 
@@ -36,12 +32,9 @@
     (update state ::words (add-word [(::current state) (::word state)]))
     state))
 
-(defn dissoc-word [state]
-  (dissoc state ::word))
-
 ;;;;;; Composite ops
 (defn combine [& args]
-  (reduce combine2 args))
+  (apply comp (reverse args)))
 
 (defn find-first [f]
   (fn [state x]
@@ -50,8 +43,8 @@
       (f x))))
 
 (defn dispatcher [args]
-  (fn [state x]
-    (let [next (reduce (find-first (eval-dispatch-pair state x))
+  (fn [state]
+    (let [next (reduce (find-first (eval-dispatch-pair state))
                        nil
                        (seq args))]
       (if (nil? next)
@@ -67,21 +60,21 @@
 
 ;;;;;; Standard ops
 (defn go-to [x]
-  (fn [state _]
+  (fn [state]
     (assoc state ::current x)))
 
-(defn no-op [state _] state)
+(def no-op identity)
 
-(defn accumulate-word [state x]
+(defn accumulate-word [state]
   (update
    state
-   ::word (fn [word] (conj (or word []) x))))
+   ::word (fn [word] (conj (or word []) (::input state)))))
 
 (defn push-word [word]
-  (fn [state _]
+  (fn [state]
     (update state ::words (add-word word))))
 
-(defn flush-word [state _]
+(defn flush-word [state]
   (-> state
       push-accumulated-word
       dissoc-word))
@@ -124,7 +117,7 @@
   (let [{current ::current
          table ::table} state]
     (assert (contains? table current))
-    ((get table current) state x)))
+    ((get table current) (assoc state ::input x))))
 
 (defn parse [state x]
   (add (reduce add state x) ::end))

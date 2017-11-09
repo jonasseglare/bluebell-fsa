@@ -24,7 +24,7 @@
     (is (whitespace? \tab))
     (is (whitespace? \space))
     (is (= [:kattskit]
-           (::fsa/words ((push-word :kattskit) init-state nil))))
+           (::fsa/words ((push-word :kattskit) init-state))))
     (is (not (whitespace? \a)))
     (is (= [[:word "Jonas"] [:word "Östlund"]]
            (get-words (parse init-state "  Jonas Östlund    "))))
