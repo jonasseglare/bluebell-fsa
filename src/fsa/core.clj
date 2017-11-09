@@ -51,8 +51,11 @@
       (let [next (reduce (find-first (eval-dispatch-pair state x))
                          nil
                          (seq args))]
-        (assert (state? next))
-        next))))
+        (if (nil? next)
+          (throw (ex-info
+                  "No matching form in dispatch"
+                  {:args args}))
+          next)))))
 
 
 ;;;;;; Standard ops

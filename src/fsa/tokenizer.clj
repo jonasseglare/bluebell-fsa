@@ -17,6 +17,5 @@
   {::fsa/current :idle
    ::fsa/table {:idle (fsa/dispatch)}})
 
-
-; (fsa/parse graphviz-state "digraph kattskit {}")
+;(fsa/parse graphviz-state "digraph kattskit { a b c }")
 
