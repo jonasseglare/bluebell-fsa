@@ -1,4 +1,5 @@
-(ns fsa.tokenizer)
+(ns fsa.tokenizer
+  (:require [fsa.core :as fsa]))
 
 (defn remove-eol-comment [s]
   (let [i (.indexOf s "//")]
@@ -11,3 +12,11 @@
    str
    (map remove-eol-comment
         (clojure.string/split-lines x))))
+
+(def graphviz-state
+  {::fsa/current :idle
+   ::fsa/table {:idle (fsa/dispatch)}})
+
+
+; (fsa/parse graphviz-state "digraph kattskit {}")
+

@@ -5,5 +5,6 @@
 
 (deftest graphviz-test
   (let [s (remove-eol-comments "asdf // kattskit\n d")]
-    (is (= s "asdf  d"))))
+    (is (= s "asdf  d"))
+    (fsa/state? graphviz-state)))
 
