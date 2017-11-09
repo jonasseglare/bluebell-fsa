@@ -19,17 +19,18 @@
 
 (def end-string
   {:predicate (fsa/is= \")
-   :action (fsa/go-to :idle)})
+   :action (fsa/combine
+            fsa/flush-word
+            (fsa/go-to :idle))})
 
 (def escape-char
   {:predicate (fsa/is= \\)
    :action (fsa/go-to :escape)})
 
 (def read-escaped
-  {:predicate (constantly true)
-   :action (fsa/combine
-            (fsa/go-to :string)
-            fsa/accumulate-word)})
+  (fsa/combine
+   (fsa/go-to :string)
+   fsa/accumulate-word))
 
 (def read-char
   {:predicate (constantly true)
@@ -49,9 +50,10 @@
                          [fsa/end
                           escape-char
                           end-string
-                          read-char])}})
+                          read-char])
+                :escape read-escaped}})
 
 
 
-;(fsa/parse graphviz-state "      ")
+;(fsa/get-words (fsa/parse graphviz-state "   \"ka\\ntt\"  \"skit\"    "))
 

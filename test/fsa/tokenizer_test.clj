@@ -6,5 +6,8 @@
 (deftest graphviz-test
   (let [s (remove-eol-comments "asdf // kattskit\n d")]
     (is (= s "asdf  d"))
-    (fsa/state? graphviz-state)))
+    (is (fsa/state? graphviz-state))
+    (is (=
+         [[:string "katt"] [:string "skit"]]
+         (fsa/get-words (fsa/parse graphviz-state "   \"katt\"  \"skit\"    "))))))
 
