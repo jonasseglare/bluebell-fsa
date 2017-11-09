@@ -1,6 +1,9 @@
 (ns fsa.core-test
   (:require [clojure.test :refer :all]
-            [fsa.core :refer :all :as fsa]))
+            [fsa.core :refer :all :as fsa]
+            [clojure.spec.test.alpha :as stest]))
+
+
 
 (def terminate-word (combine flush-word (go-to :whitespace)))
 

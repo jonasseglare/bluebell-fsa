@@ -1,5 +1,6 @@
 (ns fsa.core
-  (:require [clojure.spec.alpha :as spec]))
+  (:require [clojure.spec.alpha :as spec]
+            [clojure.spec.test.alpha :as stest]))
 
 (spec/def ::table (spec/map-of (constantly true) fn?))
 (spec/def ::current (constantly true))
@@ -45,18 +46,21 @@
       state
       (f x))))
 
+(defn dispatcher [args]
+  (fn [state x]
+    (let [next (reduce (find-first (eval-dispatch-pair state x))
+                       nil
+                       (seq args))]
+      (if (nil? next)
+        (throw (ex-info
+                "No matching form in dispatch"
+                {:args args}))
+        next))))
+
 (defn dispatch [& args]
   (let [args (spec/conform ::dispatch-pairs args)]
-    (fn [state x]
-      (let [next (reduce (find-first (eval-dispatch-pair state x))
-                         nil
-                         (seq args))]
-        (if (nil? next)
-          (throw (ex-info
-                  "No matching form in dispatch"
-                  {:args args}))
-          next)))))
-
+    (dispatcher args)))
+(spec/fdef dispatch :args ::dispatch-pairs)
 
 ;;;;;; Standard ops
 (defn go-to [x]
