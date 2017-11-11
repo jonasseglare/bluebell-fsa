@@ -1,4 +1,4 @@
-(ns fsa.core
+(ns bluebell.fsa.core
   (:require [clojure.spec.alpha :as spec]
             [clojure.spec.test.alpha :as stest]
             [clojure.set]))

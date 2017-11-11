@@ -1,5 +1,5 @@
-(ns fsa.tokenizer
-  (:require [fsa.core :as fsa]))
+(ns bluebell.fsa.tokenizer
+  (:require [bluebell.fsa.core :as fsa]))
 
 (defn remove-eol-comment [s]
   (let [i (.indexOf s "//")]
