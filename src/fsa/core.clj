@@ -131,8 +131,8 @@
    ::table {:whitespace no-op
             :word no-op}})
 
-(spec/explain ::state test-state)
-(assert (spec/valid? ::state test-state))
+;(spec/explain ::state test-state)
+;(assert (spec/valid? ::state test-state))
 
 (defn add [state x]
   (assert (state? state))

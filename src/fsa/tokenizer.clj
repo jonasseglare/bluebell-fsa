@@ -62,7 +62,6 @@
 (def special-graphviz-symbols (set "->"))
 
 (defn special-graphviz-symbol? [x]
-  (println "Is it a special symbol?" x)
   (contains? special-graphviz-symbols x))
 
 (def acc-special-graphviz
