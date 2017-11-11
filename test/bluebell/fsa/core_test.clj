@@ -1,6 +1,6 @@
-(ns fsa.core-test
+(ns bluebell.fsa.core-test
   (:require [clojure.test :refer :all]
-            [fsa.core :refer :all :as fsa]
+            [bluebell.fsa.core :refer :all :as fsa]
             [clojure.spec.test.alpha :as stest]))
 
 
